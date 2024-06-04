@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký</title>
+    <link rel="stylesheet" href="{% static 'CSS/register.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Đăng ký</h1>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" id="username" name="username" placeholder="Tên đăng nhập" required>
+            <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
+            <input type="text" id="full_name" name="full_name" placeholder="Họ và tên" required>
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="text" id="phone_number" name="phone_number" placeholder="Số điện thoại" required>
+            <input type="text" id="address" name="address" placeholder="Địa chỉ" required>
+            <button type="submit">Đăng ký</button>
+            <p>Bạn đã có tài khoản? <a href="{% url 'login' %}">Đăng nhập ngay</a></p>
+        </form>
+    </div>
+</body>
+</html>

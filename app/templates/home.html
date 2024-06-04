@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        #navbar {
+            width: 100%;
+            background-color: rgba(26, 188, 156, 0.8);
+            color: white;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px); 
+        }
+        #navbar h2 {
+            margin: 0;
+            font-size: 24px;
+            color: white;
+        }
+        #navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            transition: background 0.3s, color 0.3s;
+            font-size: 18px;
+            border-radius: 4px;
+        }
+        #navbar a:hover {
+            background-color: rgba(22, 160, 133, 0.8); 
+            color: white;
+        }
+        #content {
+            padding: 100px 20px 20px; 
+            background: url('{% static "IMG/homebr.jpg" %}') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            height: calc(100vh - 60px); 
+            overflow-y: auto;
+        }
+        #content h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        #content p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .overlay {
+            background: rgba(0, 0, 0, 0.5); 
+            padding: 20px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar">
+        <h2><a href="{% url 'home' %}">Menu</a></h2>
+        <a href="{% url 'search' %}">Tìm kiếm</a>
+        <a href="{% url 'thongke' %}">Thống kê</a>
+        <a href="{% url 'predict' %}">Dự Đoán</a>
+        <a href="{% url 'account' %}">Tài khoản</a>
+        <a class="logout-btn" href="{% url 'login' %}">Đăng xuất</a>
+    </div>
+    <div id="content">
+        <div class="overlay">
+            <h1>Chào mừng bạn đến với trang của chúng tôi</h1>
+            <p>Trang web này sẽ giúp bạn quản lý chi tiêu điện nước của gia đình bạn, hãy khám phá nhé!</p>
+        </div>
+    </div>
+</body>
+</html>

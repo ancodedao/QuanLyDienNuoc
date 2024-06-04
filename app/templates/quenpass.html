@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quên mật khẩu</title>
+    <link rel="stylesheet" href="{% static 'css/quenpass.css' %}">
+</head>
+<body>
+    <div class="forgot-password-container">
+        <h1>Quên mật khẩu</h1>
+        <form method="post" class="forgot-password-form">
+            {% csrf_token %}
+            <input type="text" id="username" name="username" placeholder="Tên đăng nhập" required>
+            <button type="submit">Gửi mật khẩu qua email</button>
+        </form>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>

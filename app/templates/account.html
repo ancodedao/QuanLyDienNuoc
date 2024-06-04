@@ -1,0 +1,215 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tài khoản</title>
+    <link rel="stylesheet" href="{% static 'CSS/account.css' %}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #navbar {
+            width: 100%;
+            background-color: rgba(26, 188, 156, 0.8); /* Semi-transparent background */
+            color: white;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px); /* Add a blur effect for a more modern look */
+        }
+        #navbar h2 {
+            margin: 0;
+            font-size: 24px;
+            color: white;
+        }
+        #navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            transition: background 0.3s, color 0.3s;
+            font-size: 18px;
+            border-radius: 4px;
+        }
+        #navbar a:hover {
+            background-color: rgba(22, 160, 133, 0.8); /* Semi-transparent hover effect */
+            color: white;
+        }
+        #content {
+            padding: 100px 20px 20px; /* Add padding-top to prevent content from being hidden behind the fixed navbar */
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            color: black;
+            width: 100%;
+            max-width: 800px;
+        }
+        .profile-image {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .profile-info {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .profile-info p {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        .profile-info span {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5c67f2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #4a54e1;
+        }
+        .success, .error {
+            padding: 10px;
+            color: white;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .success {
+            background-color: #4CAF50; /* Green */
+        }
+        .error {
+            background-color: #f44336; /* Red */
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar">
+        <h2><a href="{% url 'home' %}">Menu</a></h2>
+        <a href="{% url 'search' %}">Tìm kiếm</a>
+        <a href="{% url 'thongke' %}">Thống kê</a>
+        <a href="{% url 'predict' %}">Dự Đoán</a>
+        <a href="{% url 'account' %}">Tài khoản</a>
+        <a class="logout-btn" href="{% url 'login' %}">Đăng xuất</a>
+    </div>
+    <div id="content">
+        <div class="form-container">
+            <div class="profile-info">
+                <div class="profile-image">
+                    <img src="{{ user.avatar.url }}" alt="Ảnh đại diện" style="height: 100px; width: 100px; border-radius: 50%;">
+                </div>
+                <div>
+                    <p><span>Username:</span> <i>{{ user.username }}</i></p>
+                    <p><span>Full Name:</span> <i>{{ user.full_name }}</i></p>
+                    <p><span>Email:</span> <i>{{ user.email }}</i></p>
+                    <p><span>Phone Number:</span><i> {{ user.phone_number }}</i></p>
+                    <p><span>Address:</span> <i>{{ user.address }}</i></p>
+                </div>
+            </div>
+
+            {% for message in messages %}
+            <div class="{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            <!-- Form thay đổi thông tin cá nhân -->
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="full_name">Thay đổi họ tên:</label>
+                    <input type="text" id="full_name" name="full_name" value="{{ user.full_name }}" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                </div>
+                <div class="input-group">
+                    <label for="phone_number">Số điện thoại:</label>
+                    <input type="text" id="phone_number" name="phone_number" value="{{ user.phone_number }}" required>
+                </div>
+                <div class="input-group">
+                    <label for="address">Địa chỉ:</label>
+                    <input type="text" id="address" name="address" value="{{ user.address }}" required>
+                </div>
+                <input type="hidden" name="change_info" value="1">
+                <button type="submit">Cập nhật thông tin</button>
+            </form>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ avatar_form.as_p }}
+                <button type="submit" name="change_avatar">Cập nhật Ảnh Đại Diện</button>
+            </form>
+            <!-- Form thay đổi mật khẩu -->
+            <form method="post" action="{% url 'account' %}">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="id_old_password">Mật khẩu cũ:</label>
+                    <input type="password" id="id_old_password" name="old_password" required>
+                </div>
+                <div class="input-group">
+                    <label for="id_new_password1">Mật khẩu mới:</label>
+                    <input type="password" id="id_new_password1" name="new_password1" required>
+                </div>
+                <div class="input-group">
+                    <label for="id_new_password2">Xác nhận mật khẩu mới:</label>
+                    <input type="password" id="id_new_password2" name="new_password2" required>
+                </div>
+                <input type="hidden" name="change_password" value="1">
+                <button type="submit">Đổi mật khẩu</button>
+            </form>
+            
+        </div>
+    </div>
+</body>
+</html>

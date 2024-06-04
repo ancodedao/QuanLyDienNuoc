@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>403 Forbidden</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+        }
+        .container h1 {
+            font-size: 72px;
+            margin-bottom: 24px;
+        }
+        .container p {
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+        .container a {
+            font-size: 18px;
+            text-decoration: none;
+            color: white;
+            background-color: #009933;
+            padding: 10px 20px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        .container a:hover {
+            background-color: #16a085;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>403 Forbidden</h1>
+        <p>Bạn không có quyền truy cập trang này.</p>
+        <a href="{% url 'home' %}">Quay lại trang chủ</a>
+    </div>
+</body>
+</html>

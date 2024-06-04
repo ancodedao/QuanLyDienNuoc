@@ -1,0 +1,233 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tìm Kiếm Hóa Đơn Tiền Điện</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        #navbar {
+            width: 100%;
+            background-color: rgba(26, 188, 156, 0.8);
+            color: white;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        #navbar h2 {
+            margin: 0;
+            font-size: 24px;
+            color: white;
+        }
+        #navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            transition: background 0.3s, color 0.3s;
+            font-size: 18px;
+            border-radius: 4px;
+        }
+        #navbar a:hover {
+            background-color: rgba(22, 160, 133, 0.8);
+            color: white;
+        }
+        #content {
+            padding: 100px 20px 20px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            min-height: calc(100vh - 60px);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #content h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            color: black;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #009933;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #16a085;
+        }
+        .bill-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1900px;
+        }
+        .bill-item {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            color: black;
+        }
+        .bill-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .edit-btn, .delete-btn, .export-btn {
+            margin-right: 0;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar">
+        <h2><a href="{% url 'home' %}">Menu</a></h2>
+        <a href="{% url 'search' %}">Tìm kiếm</a>
+        <a href="{% url 'thongke' %}">Thống kê</a>
+        <a href="{% url 'predict' %}">Dự Đoán</a>
+        <a href="{% url 'account' %}">Tài khoản</a>
+        <a class="logout-btn" href="{% url 'login' %}">Đăng xuất</a>
+    </div>
+    <div id="content">
+        <h1>Tìm Kiếm Hóa Đơn Tiền Điện</h1>
+        <form method="get">
+            {{ form.as_p }}
+            <div class="button-group">
+                <button type="submit">Tìm kiếm</button>
+                {% if request.user.is_superuser or request.user.bill_permissions.can_add %}
+                    <button type="button" onclick="window.location.href='{% url 'add_bill' %}'">Thêm Hóa Đơn</button>
+                {% endif %}
+            </div>
+        </form>
+        <div class="bill-list">
+            {% if request.user.is_superuser or request.user.bill_permissions.can_view %}
+                {% for bill in bills %}
+                <div class="bill-item">
+                    <div class="bill-info">
+                        <strong>Tên hóa đơn:</strong> {{ bill.bill_name }}<br>
+                        <strong>Ngày tạo hóa đơn:</strong> {{ bill.payment_date }}<br>
+                        <strong>Hạn thanh toán:</strong> {{ bill.han_thanhtoan }}<br>
+                        <strong>Số lượng tiêu thụ:</strong> {{ bill.consumption }} kWh<br>
+                        <strong>Số lượng tiêu thụ nước:</strong> {{ bill.water_consumption }} m³<br>
+                        <strong>Tổng tiền:</strong> {{ bill.total_amount }}
+                    </div>
+                    <div class="buttons">
+                        {% if request.user.is_superuser or request.user.bill_permissions.can_change %}
+                            <button class="edit-btn" onclick="window.location.href='{% url 'edit_bill' bill.id %}'">Chỉnh sửa</button>
+                        {% endif %}
+                        {% if request.user.is_superuser or request.user.bill_permissions.can_delete %}
+                            <button class="delete-btn" data-bill-id="{{ bill.id }}">Xóa</button>
+                        {% endif %}
+                        <button class="export-btn" data-bill-id="{{ bill.id }}">Xuất</button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>Bạn không có quyền xem hóa đơn.</p>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var exportButtons = document.querySelectorAll('.export-btn');
+            exportButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    var billId = event.target.getAttribute('data-bill-id');
+                    fetch('/export-bill/' + billId + '/', {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        alert(data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Không thể gửi email. Vui lòng thử lại sau.');
+                    });
+                });
+            });
+    
+            var deleteButtons = document.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    var billId = event.target.getAttribute('data-bill-id');
+                    var confirmDelete = confirm("Bạn có chắc muốn xóa hóa đơn này không?");
+                    if (confirmDelete) {
+                        var csrftoken = getCookie('csrftoken');
+    
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', '/delete-bill/' + billId + '/', true);
+                        xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                        xhr.onload = function() {
+                            if (xhr.status === 200) {
+                                alert("Hóa đơn đã được xóa thành công.");
+                                location.reload();
+                            } else {
+                                alert("Xóa hóa đơn không thành công. Vui lòng thử lại sau.");
+                            }
+                        };
+                        xhr.send();
+                    }
+                });
+            });
+        });
+    
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+</html>
